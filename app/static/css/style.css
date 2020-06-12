@@ -1,0 +1,16 @@
+#textBodycard {
+    color: #3700b3; 
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 40px;
+}
+
+.button-color{
+    background-color: #3700b3;
+    color: white;
+    border-radius: 12px;
+    border: none;
+    padding: 10px;
+    text-align: center;
+    cursor: pointer;
+    display: inline-block;
+}

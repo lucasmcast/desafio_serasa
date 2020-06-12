@@ -1,0 +1,46 @@
+{% extends "base.html"%}
+{% from "_wtf.html" import form_field_input, form_field_submit, form_field_selected %}
+{% block title %}Nota Fiscal{% endblock %}
+
+{% block content %}
+{% if form.errors %}
+    {% for error in form.errors%}
+        {{error}}
+    {% endfor %}
+{% endif %}
+<div class="m-5">
+    <!-- Botão para adicionar empresa -->
+    <button class="button-color mb-2" data-toggle="modal" data-target="#modalNotaFiscal">
+        <i class="fa fa-plus"></i> Emitir Nota Fiscal
+    </button>
+
+    <!-- Modal Emitir Nota fiscal -->
+    <div class="modal fade" id="modalNotaFiscal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel">Nota Fiscal</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Fechar">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+                <form method="POST">
+                    {{ form.hidden_tag()}}
+                    {{ form_field_selected(form.empresa)}}
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+                        {{form_field_submit(form.submit)}}
+                    </div>
+                </form>
+            </div>
+          </div>
+        </div>
+    </div>
+    {% for nota in notas %}
+    <ul class="list-group">
+        <li class="list-group-item">Numero da Nota Fiscal: {{ nota['numero_nota'] }} | Empresa: {{ nota['fantasia']}} | Data da Emisão: {{nota['data_emisao']}}</li>
+    </ul>
+    {% endfor %}
+</div>
+{% endblock %}

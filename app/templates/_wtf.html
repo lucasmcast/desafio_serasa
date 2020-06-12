@@ -1,0 +1,26 @@
+<!--macro renderiza os imput no hmtl-->
+{% macro form_field_input(field) %}
+<div class="form-group">
+    <label for="teste">{{ field.label.text}}</label>
+    {{field(class_='form-control', **kwargs)|safe}}
+</div>
+{% endmacro %}
+
+<!--macro renderiza os submit no hmtl-->
+{% macro form_field_submit(field) %}
+<div>
+    {{ field(class_='btn btn-primary', **kwargs)| safe}}
+</div>
+{% endmacro %}
+<!-- <button class="btn btn-secondary" data-dismiss="modal">Fechar</button> -->
+
+<!--macro renderiza os selected no hmtl-->
+{% macro form_field_selected(field) %}
+<label for="{{field.empresa }}" class="text-content">{{ field.label.text }}</label>
+<div class="input-group mb-1">
+    <div class="input-group-append">
+        <span class="input-group-text"></span>
+    </div>
+    {{field(class_='form-control input_user', **kwargs)|safe}}
+</div>
+{% endmacro %}

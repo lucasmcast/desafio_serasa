@@ -24,10 +24,25 @@ class ProductionConfig(Config):
     SQLALCHEMY_DATABASE_URI =  os.environ.get('DATABASE_URL') or \
         'sqlite:///' + os.path.join(basedir, 'data.sqlite')
 
+class UnixConfig(ProductionConfig):
+    """Configuração para inplantação em sistemas baseados em Unix"""
+
+    @classmethod
+    def init_app(cls, app):
+        ProductionConfig.init_app(app)
+
+        #log disponivel para administrador do SO em syslog
+        import logging
+        from logging.handlers import SysLogHandler
+        syslog_handler = SysLogHandler()
+        syslog_handler.setLevel(logging.WARNING)
+        app.logger.addHandler(syslog_handler)
+
 config = {
     'development': DevelopmentConfig,
     'testing': TestingConfig,
     'production': ProductionConfig,
+    'unix' : UnixConfig,
 
     'default':DevelopmentConfig
 }

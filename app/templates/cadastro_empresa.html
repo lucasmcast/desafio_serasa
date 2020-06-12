@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% from "_wtf.html" import form_field_input, form_field_submit %}
+{% block title %}Cadastro{% endblock %}
+
+{% block content %}
+<div class="m-5" >
+
+    <!-- Botão para adicionar empresa -->
+    <button class="button-color mb-2" data-toggle="modal" data-target="#modalCadastro">
+        <i class="fa fa-plus"></i> Nova Empresa
+    </button>
+
+    <!-- Modal Cadastro -->
+    <div class="modal fade" id="modalCadastro" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel">Empresa</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Fechar">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+                <form method="POST">
+                    {{ form.hidden_tag()}}
+                    {{ form_field_input(form.fantasia)}}
+                    {{ form_field_input(form.razao_social)}}
+                    {{ form_field_input(form.cnpj)}}
+                    {{ form_field_input(form.endereco)}}
+                    {{ form_field_input(form.email)}}
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+                        {{ form_field_submit(form.button_cadastrar)}}
+                    </div>
+                </form>
+            </div>
+          </div>
+        </div>
+    </div>
+    {% for empresa in empresas %}
+    <ul class="list-group">
+        <li class="list-group-item">CNPJ: {{ empresa.cnpj }} | Fantasia: {{ empresa['fantasia']}}</li>
+    </ul>
+    {% endfor %}
+</div>
+{% endblock %}
