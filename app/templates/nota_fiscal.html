@@ -14,6 +14,7 @@
         <i class="fa fa-plus"></i> Emitir Nota Fiscal
     </button>
 
+    <h1 class="mb-4" style="text-align: center;">Notas Fiscais Emitidas:</h1>
     <!-- Modal Emitir Nota fiscal -->
     <div class="modal fade" id="modalNotaFiscal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
@@ -39,7 +40,7 @@
     </div>
     {% for nota in notas %}
     <ul class="list-group">
-        <li class="list-group-item">Numero da Nota Fiscal: {{ nota['numero_nota'] }} | Empresa: {{ nota['fantasia']}} | Data da Emisão: {{nota['data_emisao']}}</li>
+        <li class="list-group-item">Numero da Nota Fiscal: {{ nota['numero_nota'] }} | Empresa: {{ nota['empresa']}} | Data da Emisão: {{nota['data_emisao']}}</li>
     </ul>
     {% endfor %}
 </div>

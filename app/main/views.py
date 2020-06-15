@@ -1,11 +1,12 @@
 from flask import Flask, render_template, redirect, url_for
 from datetime import date
 from . import main
-from .forms import FormEmpresa, FormNotaFiscal
+from .forms import FormEmpresa, FormNotaFiscal, FormDebito, FormUploadFile
 from .. import db
-from ..models import Empresa, NotaFiscal
+from ..models import Empresa, NotaFiscal, Debito
+import json
 import random
-from pprint import pprint
+
 
 
 notas = []
@@ -24,6 +25,7 @@ def index():
 def cadastro():
 
     form = FormEmpresa()
+    form_upload = FormUploadFile()
     empresas = get_empresas()
 
     if form.validate_on_submit():
@@ -45,9 +47,22 @@ def cadastro():
 
         empresas = get_empresas()
 
-        return render_template('cadastro_empresa.html', form=form, empresas=empresas)
+        return render_template('cadastro_empresa.html', form=form, form_upload=form_upload, empresas=empresas)
     
-    return render_template('cadastro_empresa.html', form=form, empresas=empresas)
+    if form_upload.validate_on_submit():
+        print("Entrou no validate")
+        # file = form_upload.file_upload.data
+        # file.save('tmp/tmp.json')
+
+        # with open('tmp/tmp.json', 'r') as json_file:
+        #     dados = json.load(json_file)
+        
+       
+            
+
+        return render_template('cadastro_empresa.html', form=form, form_upload=form_upload, empresas=empresas)
+    
+    return render_template('cadastro_empresa.html', form=form, form_upload=form_upload, empresas=empresas)
 
 @main.route('/notaFiscal', methods=['GET', 'POST'])
 def nota_fiscal():
@@ -68,7 +83,7 @@ def nota_fiscal():
             empresa=result
         )
         indice = result.indice
-        valor_final = NotaFiscal.calculo_nota_fiscal(indice)
+        valor_final = NotaFiscal.calculo_nota_fiscal(indice, 2)
         result.indice = valor_final
 
         db.session.add(result)
@@ -82,9 +97,38 @@ def nota_fiscal():
 
     return render_template('nota_fiscal.html', form=form, notas=notas)
 
-@main.route('/debitos')
+@main.route('/debitos', methods=['GET', 'POST'])
 def debito():
-    return render_template('debito.html')
+    form = FormDebito()
+    empresas = get_empresas()
+    debitos = get_debitos()
+    form.empresa.choices = [(str(i), empresa['fantasia']) for i, empresa in enumerate(empresas)]
+
+    if form.validate_on_submit():
+        index = int(form.empresa.data)
+        empresa = form.empresa.choices[index][1]
+        valor_debito = form.valor_debito.data
+        result = Empresa.query.filter_by(fantasia=empresa).first()
+        
+        debito = Debito(
+            valor_debito=valor_debito,
+            data_debito=date.today(),
+            empresa=result
+        )
+        indice = result.indice
+        valor_final = Debito.calculo_debito(indice, 4)
+        result.indice = valor_final
+
+        db.session.add(result)
+        db.session.add(debito)
+        db.session.commit()
+
+        form.empresa.data = ''
+        debitos = get_debitos()
+
+        return render_template('debito.html',form=form, debitos=debitos)
+
+    return render_template('debito.html',form=form, debitos=debitos)
 
 def get_empresas():
     empresas = Empresa.query.all()
@@ -99,3 +143,8 @@ def get_notas():
     notas_json = [nota.to_json(nota.empresa.fantasia) for nota in notas ]
     return notas_json
 
+def get_debitos():
+    debitos = Debito.query.all()
+    debitos_json = [debito.to_json(debito.empresa.fantasia) for debito in debitos]
+    print(debitos_json)
+    return debitos_json

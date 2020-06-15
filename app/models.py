@@ -10,6 +10,7 @@ class Empresa(db.Model):
     email = db.Column(db.String(60))
     indice = db.Column(db.Integer)
     notas = db.relationship('NotaFiscal', backref='empresa', lazy='dynamic')
+    debitos = db.relationship('Debito', backref='empresa', lazy='dynamic')
 
     def __repr__(self):
         return f'<Empresa id={self.id_empresa}, fantasia={self.fantasia}\
@@ -39,27 +40,30 @@ class NotaFiscal(db.Model):
         return f'<NotaFiscal id={self.id_nota}, numero_nota={self.numero_nota}\
             , id_empresa={self.id_empresa}'
     
-    def to_json(self, fantasia_empresa):
+    def to_json(self, empresa):
         json_generate = {
             'numero_nota' : self.numero_nota,
-            'fantasia' : fantasia_empresa,
+            'empresa' : empresa,
             'data_emisao' : self.data_emisao
         }
         return json_generate
     
     @staticmethod
-    def calculo_nota_fiscal(indice=None):
-        if indice:
-            perc = indice * 0.02
-            valor_final = int(indice + perc)
+    def calculo_nota_fiscal(indice=None, perc=None):
+        """Função resposavel por somar porcentagem em cima do indece a cada nota emitida"""
+        if indice and perc:
+            quociente = indice / 100
+            result = quociente * perc
+            valor_final = indice + result
+
             if valor_final > 100:
                 valor_final = 100
-            elif valor_final < 0:
+            elif valor_final <= 0:
                 valor_final = 1
             
-            return valor_final
+            return int(valor_final)
         else:
-            print('Valor de indice não informado')
+            print("Valores para o calculo não foram informados")
 
 
 
@@ -80,6 +84,44 @@ class ConfCalculo(db.Model):
     base_debito = db.Column(db.Integer)
     base_indice = db.Column(db.Integer)
 
-# class Debito(db.Model):
+class Debito(db.Model):
 
-#     __tablename__ = 'debitos'
+    __tablename__ = 'debitos'
+    id_debito = db.Column(db.Integer, primary_key=True)
+    valor_debito = db.Column(db.Integer)
+    id_empresa = db.Column(db.Integer, db.ForeignKey('empresas.id_empresa'))
+    data_debito = db.Column(db.String(20))
+
+    def __repr__(self):
+        return f'<Debito id_debito={self.id_debito}, valor_debito={self.valor_debito},\
+            id_empresa={self.id_empresa}, data_debito={self.data_debito}'
+
+    def to_json(self, empresa):
+        json_generate = {
+            'empresa' : empresa,
+            'valor' : self.valor_debito,
+            'data_debito' : self.data_debito
+        }
+        return json_generate
+    
+    @staticmethod
+    def calculo_debito(indice=None, perc=None):
+        """Função responsável por fazer o calculo subtraindo o indece pela porcentagem a cada debito realizado"""
+        if indice and perc:
+            quociente = indice / 100
+            result = quociente * perc
+            indice -= result
+
+            if quociente < 1:
+                resto = round(indice % 1, 2)
+                arredondamento = 1 - resto
+                indice += arredondamento
+            
+            if indice > 100:
+                indice = 100
+            elif indice <= 0:
+                indice = 1
+
+            return int(indice)
+        else:
+            print("Valores para o calculo não foram informados")
