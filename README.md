@@ -71,7 +71,7 @@ Endereço interno padrão para acessar a aplicação é http://127.0.0.1:5000
 
 - [x] Precisa ter uma interface;
 - [ ] Precisa ter testes unitários;
-- [ ] Deve ter a documentação de setup e do funcionamento das APIs;
+- [x] Deve ter a documentação de setup e do funcionamento das APIs;
 
 ### Requisitos da aplicação:
 
