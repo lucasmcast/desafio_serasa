@@ -10,7 +10,7 @@ Considerando as regras para o cáculo:
 
 ## Documentação da API:
 
-link para documentação
+[Estrutura do documento](https://github.com/lucasmcast/desafio_serasa/wiki/Documenta%C3%A7%C3%A3o-da-API)
 
 ## Instalação
 
@@ -22,34 +22,48 @@ Requisitos:
 
 ### Clonar repositório:
 
-```git clone https://github.com/lucasmcast/desafio_serasa.git```
+```bash
+git clone https://github.com/lucasmcast/desafio_serasa.git
+```
 
 ### Criar ambiente virtual:
 
-``` cd desafio_serasa/ ```
-``` python3 -m venv venv ```
+```bash 
+cd desafio_serasa/
+python3 -m venv venv 
+```
 
 #### Ativando ambiente virtual:
 
 Linux:
 
-``` source venv/bin/activate ```
+```bash 
+source venv/bin/activate 
+```
 
 Windows:
 
-``` venv\Scripts\activate```
+```bash 
+venv\Scripts\activate
+```
 
 ### Instalação das dependências:
 
-```(venv) pip install -r requeriments/commons.txt```
+```bash
+(venv) pip install -r requeriments/commons.txt
+```
 
 ### Criando o banco de dados:
 
-``` (venv) flask deploy ```
+```bash 
+(venv) flask deploy 
+```
 
 ### Executando o projeto:
 
-``` flask run ```
+```bash 
+flask run 
+```
 
 Endereço interno padrão para acessar a aplicação é http://127.0.0.1:5000
 

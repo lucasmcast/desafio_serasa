@@ -74,7 +74,7 @@ def calculo_nota_fiscal(notas, dados_json, empresa, indice):
             notas.append(
                 NotaFiscal(
                     numero_nota=nota['numero_nota'],
-                    data_emisao=nota['data_emisao'],
+                    data_emisao=nota['data_emissao'],
                     empresa=empresa
                 )
             )
