@@ -21,4 +21,5 @@ def make_shell_context():
 @app.cli.command()
 def deploy():
     """Criar o banco para a aplicação ser executada"""
+    db.drop_all()
     db.create_all()
