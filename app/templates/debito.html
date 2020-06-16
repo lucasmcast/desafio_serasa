@@ -29,7 +29,6 @@
                 <form method="POST">
                     {{ form.hidden_tag()}}
                     {{ form_field_selected(form.empresa)}}
-                    {{ form_field_input(form.valor_debito)}}
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
                         {{form_field_submit(form.submit)}}
@@ -41,7 +40,7 @@
     </div>
     {% for debito in debitos %}
     <ul class="list-group">
-        <li class="list-group-item">Empresa: {{ debito['empresa']}} | Data do Débito: {{debito['data_debito']}}</li>
+        <li class="list-group-item">Empresa: {{ debito['empresa']}} | CNPJ: {{debito['cnpj']}} | Data do Débito: {{debito['data_debito']}}</li>
     </ul>
     {% endfor %}
 </div>

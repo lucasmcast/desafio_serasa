@@ -1,4 +1,4 @@
-from flask import Flask, render_template, redirect, url_for
+from flask import Flask, render_template, redirect, url_for, flash
 from datetime import date
 from . import main
 from .forms import FormEmpresa, FormNotaFiscal, FormDebito, FormUploadFile
@@ -15,7 +15,15 @@ notas = []
 def index():
     #ordena a lista de empresa do maior para o menor indice
     empresas = Empresa.query.all()
+
     empresas_json = [empresa.to_json() for empresa in empresas]
+    
+    for emp in empresas_json:
+        id_empresa = int(emp['id_empresa'])
+        notas = NotaFiscal.query.filter_by(id_empresa=id_empresa).all()
+        debitos = Debito.query.filter_by(id_empresa=id_empresa).all()
+        emp['qtd_notas'] = len(notas)
+        emp['qtd_debitos'] = len(debitos)
 
     empresas_json = sorted(empresas_json, key=lambda k: k['indice'], reverse=True)
 
@@ -28,12 +36,12 @@ def cadastro():
     form_upload = FormUploadFile()
     empresas = get_empresas()
 
+    form_upload.empresa.choices = [(str(i), (empresa['fantasia'],empresa['cnpj'])) for i, empresa in enumerate(empresas)]
     if form.validate_on_submit():
         empresa = Empresa(
             fantasia=form.fantasia.data,
             razao_social=form.razao_social.data,
             cnpj=form.cnpj.data,
-            email=form.email.data,
             indice=50
         )
         db.session.add(empresa)
@@ -42,24 +50,15 @@ def cadastro():
         form.fantasia.data = ''
         form.razao_social.data = ''
         form.cnpj.data = ''
-        form.endereco.data = ''
-        form.email.data = ''
 
+        flash("Cadastrado com sucesso")
         empresas = get_empresas()
+        form_upload.empresa.choices = [(str(i), (empresa['fantasia'],empresa['cnpj'])) for i, empresa in enumerate(empresas)]
 
         return render_template('cadastro_empresa.html', form=form, form_upload=form_upload, empresas=empresas)
     
-    if form_upload.validate_on_submit():
-        print("Entrou no validate")
-        # file = form_upload.file_upload.data
-        # file.save('tmp/tmp.json')
-
-        # with open('tmp/tmp.json', 'r') as json_file:
-        #     dados = json.load(json_file)
-        
-       
-            
-
+    if form_upload.validate_on_submit():             
+        flash("Importado com sucesso")
         return render_template('cadastro_empresa.html', form=form, form_upload=form_upload, empresas=empresas)
     
     return render_template('cadastro_empresa.html', form=form, form_upload=form_upload, empresas=empresas)
@@ -69,13 +68,13 @@ def nota_fiscal():
     form = FormNotaFiscal()
     empresas = get_empresas()
     notas = get_notas()
-    form.empresa.choices = [(str(i), empresa['fantasia']) for i, empresa in enumerate(empresas)]
+    form.empresa.choices = [(str(i), (empresa['fantasia'], empresa['cnpj'])) for i, empresa in enumerate(empresas)]
 
     if form.validate_on_submit():
         index = int(form.empresa.data)
         numero_nota = random.randint(1, 123456)
         empresa = form.empresa.choices[index][1]
-        result = Empresa.query.filter_by(fantasia=empresa).first()
+        result = Empresa.query.filter_by(cnpj=empresa[1]).first()
         
         nota = NotaFiscal(
             numero_nota=numero_nota,
@@ -102,16 +101,14 @@ def debito():
     form = FormDebito()
     empresas = get_empresas()
     debitos = get_debitos()
-    form.empresa.choices = [(str(i), empresa['fantasia']) for i, empresa in enumerate(empresas)]
+    form.empresa.choices = [(str(i),(empresa['fantasia'], empresa['cnpj'])) for i, empresa in enumerate(empresas)]
 
     if form.validate_on_submit():
         index = int(form.empresa.data)
         empresa = form.empresa.choices[index][1]
-        valor_debito = form.valor_debito.data
-        result = Empresa.query.filter_by(fantasia=empresa).first()
+        result = Empresa.query.filter_by(cnpj=empresa[1]).first()
         
         debito = Debito(
-            valor_debito=valor_debito,
             data_debito=date.today(),
             empresa=result
         )
@@ -137,14 +134,10 @@ def get_empresas():
 
 def get_notas():
     notas = NotaFiscal.query.all()
-    # for nota in notas:
-    #     print(nota.empresa.fantasia)
-
     notas_json = [nota.to_json(nota.empresa.fantasia) for nota in notas ]
     return notas_json
 
 def get_debitos():
     debitos = Debito.query.all()
-    debitos_json = [debito.to_json(debito.empresa.fantasia) for debito in debitos]
-    print(debitos_json)
+    debitos_json = [debito.to_json(debito.empresa) for debito in debitos]
     return debitos_json

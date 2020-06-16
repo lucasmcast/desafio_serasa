@@ -1,7 +1,7 @@
 {
     "fantasia" : "Teste de Empresa",
     "razao_social" : "Teste de Empresa LTDA ME",
-    "cnpj" : "33",
+    "cnpj" : "12345678",
     "notas" : [
         {
             "numero_nota" : "2255668",
@@ -30,24 +30,19 @@
     ],
     "debitos" : [
         {
-            "data_debito" : "2020-06-13",
-            "valor_debito" : "126.0"
+            "data_debito" : "2020-06-13"
         },
         {
-            "data_debito" : "2020-06-13",
-            "valor_debito" : "1352.0"
+            "data_debito" : "2020-06-13"
         },
         {
-            "data_debito" : "2020-06-13",
-            "valor_debito" : "365.0"
+            "data_debito" : "2020-06-13"
         },
         {
-            "data_debito" : "2020-06-13",
-            "valor_debito" : "545.0"
+            "data_debito" : "2020-06-13"
         },
         {
-            "data_debito" : "2020-06-13",
-            "valor_debito" : "365.0"
+            "data_debito" : "2020-06-13"
         }
     ]
 }

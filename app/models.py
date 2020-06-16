@@ -7,7 +7,6 @@ class Empresa(db.Model):
     fantasia = db.Column(db.String(80))
     razao_social = db.Column(db.String(80))
     cnpj = db.Column(db.String(18), unique=True)
-    email = db.Column(db.String(60))
     indice = db.Column(db.Integer)
     notas = db.relationship('NotaFiscal', backref='empresa', lazy='dynamic')
     debitos = db.relationship('Debito', backref='empresa', lazy='dynamic')
@@ -22,7 +21,6 @@ class Empresa(db.Model):
             'fantasia' : self.fantasia,
             'razao_social' : self.razao_social,
             'cnpj' : self.cnpj,
-            'email' : self.email,
             'indice' : self.indice
         }
         return json_generate
@@ -34,7 +32,6 @@ class NotaFiscal(db.Model):
     numero_nota = db.Column(db.String(50), unique=True)
     data_emisao = db.Column(db.String(20))
     id_empresa = db.Column(db.Integer, db.ForeignKey('empresas.id_empresa'))
-    itens_nota = db.relationship('NotaFiscalItens', backref='notafiscal', lazy='dynamic')
 
     def __repr__(self):
         return f'<NotaFiscal id={self.id_nota}, numero_nota={self.numero_nota}\
@@ -66,16 +63,6 @@ class NotaFiscal(db.Model):
             print("Valores para o calculo não foram informados")
 
 
-
-class NotaFiscalItens(db.Model):
-    
-    __tablename__ = 'itens_nota'
-    id_nota_itens = db.Column(db.Integer, primary_key=True)
-    descricao_prod = db.Column(db.String(50))
-    qtd_prod = db.Column(db.Integer)
-    numro_nota = db.Column(db.Integer, db.ForeignKey('notas_fiscais.numero_nota'))
-    
-
 class ConfCalculo(db.Model):
 
     __tablename__ = 'conf_calculo'
@@ -88,7 +75,6 @@ class Debito(db.Model):
 
     __tablename__ = 'debitos'
     id_debito = db.Column(db.Integer, primary_key=True)
-    valor_debito = db.Column(db.Integer)
     id_empresa = db.Column(db.Integer, db.ForeignKey('empresas.id_empresa'))
     data_debito = db.Column(db.String(20))
 
@@ -98,8 +84,8 @@ class Debito(db.Model):
 
     def to_json(self, empresa):
         json_generate = {
-            'empresa' : empresa,
-            'valor' : self.valor_debito,
+            'empresa' : empresa.fantasia,
+            'cnpj' : empresa.cnpj,
             'data_debito' : self.data_debito
         }
         return json_generate

@@ -1,16 +1,16 @@
 {% extends "base.html" %}
-{% block title %}Home{% endblock %}
+{% block title %}Ranking{% endblock %}
 
 {% block content %}
-{% for empresa in empresas %}
+{% for  empresa in (empresas) %}
 <div class="m-5">
     <div class="card mb-3 shadow p-3 mb-5 bg-white rounded">
         <div class="card-header">
             <div class="row">
-                <div class="col" style="color: black; font-size: 40px;">
-                    Empresa: {{empresa['fantasia']}} | {{empresa['cnpj']}}
+                <div class="col" style="color: black; font-size: 20px;">
+                    {{loop.index}}º Empresa: {{empresa['fantasia']}} | CNPJ: {{empresa['cnpj']}}
                 </div>
-                <div class="col-md-auto" style="font-size: 40px; color: black;">
+                <div class="col-md-auto" style="font-size: 20px; color: black;">
                     Indice: {{empresa['indice']}}%
                 </div>
             </div>
@@ -19,13 +19,13 @@
             <div class="container">
                 <div class="row justify-content-md-center">
                     <div class="col" id="textBodycard">
-                        Nº Notas Emitidas: {{ empresa['notas'] }}
+                        Nº Notas Emitidas: {{ empresa['qtd_notas'] }}
                     </div>
                 </div>
                 <div class="row justify-content-md-center">
                     <div class="col">
                         <div id="textBodycard">
-                            Nº Débitos: <span>{{ empresa['debitos']}}</span>
+                            Nº Débitos: <span>{{ empresa['qtd_debitos']}}</span>
                         </div>
                      </div>
                 </div>

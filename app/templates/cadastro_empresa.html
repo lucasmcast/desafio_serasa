@@ -4,6 +4,15 @@
 
 {% block content %}
 <div class="m-5" >
+  {% with messages = get_flashed_messages() %}
+  {% if messages %}
+    <div class="alert alert-success" role="alert">
+      {% for message in messages %}
+        <li>{{ message }}</li>
+      {% endfor %}
+    </div>
+  {% endif %}
+{% endwith %}
   {% if form_upload.file_upload.errors %}
   <div class="form-group">
       <div class="alert alert-danger mt-2" role="alert">
@@ -19,7 +28,7 @@
           <i class="fa fa-plus"></i> Nova Empresa
       </button>
       <button class="button-color mb-2 ml-2" data-toggle="modal" data-target="#modalUploadFile">
-        <i class="fa fa-plus"></i> Importar dados
+        <i class="fa fa-plus"></i> Importar Notas/Débitos
       </button>
     </div>
     <h1 class="mb-4" style="text-align: center;">Empresas:</h1>
@@ -39,8 +48,6 @@
                     {{ form_field_input(form.fantasia)}}
                     {{ form_field_input(form.razao_social)}}
                     {{ form_field_input(form.cnpj)}}
-                    {{ form_field_input(form.endereco)}}
-                    {{ form_field_input(form.email)}}
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
                         {{ form_field_submit(form.button_cadastrar)}}
@@ -64,8 +71,10 @@
           <div class="modal-body" >
               <form method="POST" enctype="multipart/form-data">
                 {{form_upload.hidden_tag()}}
-                {{form_field_file(form_upload.file_upload) }}
-                
+                <!-- <div class="m-5"> -->
+                  {{form_field_input(form_upload.empresa)}}
+                  {{form_field_file(form_upload.file_upload) }}
+                <!-- </div> -->
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
                     {{form_field_submit(form_upload.submit)}}

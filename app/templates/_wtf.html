@@ -4,6 +4,15 @@
     <label for="teste">{{ field.label.text}}</label>
     {{field(class_='form-control', **kwargs)|safe}}
 </div>
+{% if field.errors %}
+<div class="form-group">
+    <div class="alert alert-danger mt-2" role="alert">
+        {% for error in field.errors%}
+                {{error}}
+        {% endfor %}
+    </div>
+</div>
+{% endif %}
 {% endmacro %}
 
 <!--macro renderiza os submit no hmtl-->
@@ -26,11 +35,11 @@
 {% endmacro %}
 
 {% macro form_field_file(field) %}
-<div class="input-group m-3">
+<div class="input-group">
     <div class="input-group-prepend">
         <span class="input-group-text" id="inputGroupFileAddon01">Upload</span>
     </div>
-    <div class="custom-file mr-5">
+    <div class="custom-file">
           {{field(class_='custom-file-input', **kwargs)|safe}}
 
         <label class="custom-file-label" for="inputGroupFile01">{{field.label.text}}</label>

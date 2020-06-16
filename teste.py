@@ -24,8 +24,9 @@ def calculo_debito(indice=None, perc=None):
     else:
         print('Volores não informados')
 
-
+indice = 99
 #valor = calculo_nota_fiscal(24 , 2)
-valor_debito = calculo_debito(99, 4)
+valor_debito = calculo_debito(indice, 4)
 #print(valor)
 print(valor_debito)
+print(indice)
