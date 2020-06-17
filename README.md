@@ -62,12 +62,12 @@ venv\Scripts\activate
 ### Executando o projeto:
 
 ```bash 
-flask run 
+(venv) flask run 
 ```
 
 Endereço interno padrão para acessar a aplicação é http://127.0.0.1:5000
 
-## Executar Teste Unitario:
+## Executar Teste Unitário:
 
 ```bash
 (venv) flask test
