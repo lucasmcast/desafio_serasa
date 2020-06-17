@@ -8,18 +8,37 @@ if os.path.exists(dotenv_path):
     load_dotenv(dotenv_path)
     
 from app import create_app
-from app.models import db, Empresa
-
+from app.models import db, Empresa, ConfCalculo, ConfCalculoDB
+from sqlalchemy import MetaData
 #A configuração será obtida da variavel de ambiente FLASK_CONFIG
 app = create_app(os.getenv('FLASK_CONFIG') or 'default')
+app.app_context().push()
+
 app.config
+
+
+def is_tables_exist():
+    """
+    Função verifica se existe tabelas criadas no banco de dados
+    return bool
+    """
+    metadata = MetaData(db.engine, reflect=True)
+    tables = metadata.sorted_tables
+    if len(tables) > 0:
+        return True
+    else:
+        return False
+
+if is_tables_exist():
+    ConfCalculo()
 
 @app.shell_context_processor
 def make_shell_context():
-    return dict(db=db, Empresa=Empresa)
+    return dict(db=db, Empresa=Empresa, ConfCalculoDB=ConfCalculoDB)
 
 @app.cli.command()
 def deploy():
     """Criar o banco para a aplicação ser executada"""
     db.drop_all()
     db.create_all()
+    ConfCalculoDB.insert_conf()

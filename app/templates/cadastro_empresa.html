@@ -91,3 +91,16 @@
     {% endfor %}
 </div>
 {% endblock %}
+{% block scripts %}
+  {{super()}}
+  <!-- <script>
+    var formErrors = {% if form.cnpj.errors %}true{% else %}false{% endif %};
+
+    $(document).ready(function() {
+    if (formErrors) {
+        $('#modalCadastro').modal('show');
+      }
+    });
+  </script> -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.15/jquery.mask.min.js"></script>
+{% endblock%}

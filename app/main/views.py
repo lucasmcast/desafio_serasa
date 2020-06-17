@@ -3,13 +3,9 @@ from datetime import date
 from . import main
 from .forms import FormEmpresa, FormNotaFiscal, FormDebito, FormUploadFile
 from .. import db
-from ..models import Empresa, NotaFiscal, Debito
+from ..models import Empresa, NotaFiscal, Debito, ConfCalculo
 import json
 import random
-
-
-
-notas = []
 
 @main.route('/', methods=['GET', 'POST'])
 def index():
@@ -31,6 +27,8 @@ def index():
     
 @main.route('/cadastro', methods=['GET','POST'])
 def cadastro():
+    # Carrega a base dos calculos
+    conf = ConfCalculo.getInstance().getConfCalculo()
 
     form = FormEmpresa()
     form_upload = FormUploadFile()
@@ -42,7 +40,7 @@ def cadastro():
             fantasia=form.fantasia.data,
             razao_social=form.razao_social.data,
             cnpj=form.cnpj.data,
-            indice=50
+            indice=conf['base_indice']
         )
         db.session.add(empresa)
         db.session.commit()
@@ -65,6 +63,9 @@ def cadastro():
 
 @main.route('/notaFiscal', methods=['GET', 'POST'])
 def nota_fiscal():
+    # Carrega a base dos calculos
+    conf = ConfCalculo.getInstance().getConfCalculo()
+
     form = FormNotaFiscal()
     empresas = get_empresas()
     notas = get_notas()
@@ -82,7 +83,7 @@ def nota_fiscal():
             empresa=result
         )
         indice = result.indice
-        valor_final = NotaFiscal.calculo_nota_fiscal(indice, 2)
+        valor_final = NotaFiscal.calculo_nota_fiscal(indice, conf['base_nota'])
         result.indice = valor_final
 
         db.session.add(result)
@@ -98,6 +99,9 @@ def nota_fiscal():
 
 @main.route('/debitos', methods=['GET', 'POST'])
 def debito():
+    # Carrega a base dos calculos
+    conf = ConfCalculo.getInstance().getConfCalculo()
+
     form = FormDebito()
     empresas = get_empresas()
     debitos = get_debitos()
@@ -113,7 +117,7 @@ def debito():
             empresa=result
         )
         indice = result.indice
-        valor_final = Debito.calculo_debito(indice, 4)
+        valor_final = Debito.calculo_debito(indice, conf['base_debitos'])
         result.indice = valor_final
 
         db.session.add(result)

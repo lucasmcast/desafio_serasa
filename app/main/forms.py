@@ -1,7 +1,7 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField, TextField, SelectField, FileField
-from wtforms.validators import DataRequired, StopValidation
-from ..models import Empresa, NotaFiscal, Debito
+from wtforms import StringField, SubmitField, TextField, SelectField, FileField, validators
+from wtforms.validators import DataRequired, StopValidation, Length
+from ..models import Empresa, NotaFiscal, Debito, ConfCalculo
 from .. import db
 import json
 
@@ -69,6 +69,8 @@ def validate_data(form, field):
 
 def calculo_nota_fiscal(notas, dados_json, empresa, indice):
     """Faz o calculo das notas, conforme dados recebitos pelo arquivo json"""
+    # Carrega a base dos calculos
+    conf = ConfCalculo.getInstance().getConfCalculo()
     try:
         for nota in dados_json['notas']:
             notas.append(
@@ -78,7 +80,7 @@ def calculo_nota_fiscal(notas, dados_json, empresa, indice):
                     empresa=empresa
                 )
             )
-            indice = NotaFiscal.calculo_nota_fiscal(indice, 2)
+            indice = NotaFiscal.calculo_nota_fiscal(indice, conf['base_nota'])
 
         return indice
     except:
@@ -86,6 +88,8 @@ def calculo_nota_fiscal(notas, dados_json, empresa, indice):
 
 def calculo_debito(debitos, dados_json, empresa, indice):
     """Faz o calculo dos debitos, conforme dados recebitos pelo arquivo json"""
+    # Carrega a base dos calculos
+    conf = ConfCalculo.getInstance().getConfCalculo()
     try:
         for debito in dados_json['debitos']:
             debitos.append(
@@ -94,7 +98,7 @@ def calculo_debito(debitos, dados_json, empresa, indice):
                     empresa=empresa
                 )
             )
-            indice = Debito.calculo_debito(indice, 4)
+            indice = Debito.calculo_debito(indice, conf['base_debitos'])
 
         return indice
     except:
@@ -104,7 +108,8 @@ def calculo_debito(debitos, dados_json, empresa, indice):
 class FormEmpresa(FlaskForm):
     fantasia = TextField('Fantasia', validators=[DataRequired()])
     razao_social = TextField('Razão Social')
-    cnpj = TextField('CNPJ', validators=[DataRequired(), validate_empresa])
+    cnpj = TextField('CNPJ', validators=[DataRequired(), validate_empresa, Length(min=18, message="CNPJ inválido")], 
+    render_kw={'onkeypress':"$(this).mask(\'00.000.000/0000-00\');"})
     button_cadastrar = SubmitField('Cadastrar')
 
 class FormNotaFiscal(FlaskForm):

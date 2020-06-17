@@ -70,14 +70,14 @@ Endereço interno padrão para acessar a aplicação é http://127.0.0.1:5000
 ### Requisitos Minimos para o teste:
 
 - [x] Precisa ter uma interface;
-- [ ] Precisa ter testes unitários;
+- [x] Precisa ter testes unitários;
 - [x] Deve ter a documentação de setup e do funcionamento das APIs;
 
 ### Requisitos da aplicação:
 
 - [x] Empresas Cadastradas;
 - [x] A empresa deve ter um ID;
-- [ ] API para importar dados financeiros da empresa para o banco, como, quantidade de notas no mês e debitos;
+- [x] API para importar dados financeiros da empresa para o banco, como, quantidade de notas no mês e debitos;
 - [x] Tela para o usuário importar dados das notas e debitos;
 - [x] Criar um serviço para ler dados do banco e realizar os calculos;
 - [x] Criar tela para apresentar o ranking com o índice das empresas cadastradas;
