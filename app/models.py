@@ -30,7 +30,7 @@ class NotaFiscal(db.Model):
     __tablename__ = 'notas_fiscais'
     id_nota = db.Column(db.Integer, primary_key=True)
     numero_nota = db.Column(db.String(50), unique=True)
-    data_emisao = db.Column(db.String(20))
+    data_emissao = db.Column(db.String(20))
     id_empresa = db.Column(db.Integer, db.ForeignKey('empresas.id_empresa'))
 
     def __repr__(self):
@@ -41,7 +41,7 @@ class NotaFiscal(db.Model):
         json_generate = {
             'numero_nota' : self.numero_nota,
             'empresa' : empresa,
-            'data_emisao' : self.data_emisao
+            'data_emisao' : self.data_emissao
         }
         return json_generate
     

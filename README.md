@@ -67,6 +67,12 @@ flask run
 
 Endereço interno padrão para acessar a aplicação é http://127.0.0.1:5000
 
+## Executar Teste Unitario:
+
+```bash
+(venv) flask test
+```
+
 ### Requisitos Minimos para o teste:
 
 - [x] Precisa ter uma interface;

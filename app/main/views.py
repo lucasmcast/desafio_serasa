@@ -79,7 +79,7 @@ def nota_fiscal():
         
         nota = NotaFiscal(
             numero_nota=numero_nota,
-            data_emisao=date.today(),
+            data_emissao=date.today(),
             empresa=result
         )
         indice = result.indice
